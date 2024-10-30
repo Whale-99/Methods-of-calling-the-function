@@ -1,22 +1,30 @@
 recipient = input("Введите получателя: ")
 message = input("Введите письмо: ")
 sender = input("Введите отправителя (по умолчанию: university.help@gmail.com): ")
+
 def send_email(message, recipient, sender="university.help@gmail.com"):
+    # Список допустимых доменов
     valid_domains = [".com", ".ru", ".net"]
 
-    if not (any(recipient.endswith(domain) for domain in valid_domains) and "@" in recipient):
-        print("Неверный адрес получателя")
+    # Проверка корректности email с использованием допустимых доменов
+    def is_valid_email(email):
+        return "@" in email and any(email.endswith(domain) for domain in valid_domains)
+
+    # Проверка на корректность email
+    if not (is_valid_email(sender) and is_valid_email(recipient)):
+        print(f"Невозможно отправить письмо с адреса {sender} на адрес {recipient}.")
         return
 
-    if not (any(sender.endswith(domain) for domain in valid_domains) and "@" in sender):
-        print("Неверный адрес отправителя")
+    # Проверка на отправку самому себе
+    if sender == recipient:
+        print("Нельзя отправить письмо самому себе!")
         return
 
-    print(f"Отправлено сообщение: {message}")
-    print(f"Получатель: {recipient}")
-    print(f"Отправитель: {sender}")
+    # Проверка, если отправитель по умолчанию
+    if sender == "university.help@gmail.com":
+        print(f"Письмо успешно отправлено с адреса {sender} на адрес {recipient}.")
+    else:
+        print(f"НЕСТАНДАРТНЫЙ ОТПРАВИТЕЛЬ! Письмо отправлено с адреса {sender} на адрес {recipient}.")
 
-if not sender:
-    sender = "university.help@gmail.com"
-
-send_email(message, recipient, sender)
+# Вызов функции с пользовательским вводом
+send_email(message, recipient, sender if sender else "university.help@gmail.com")
